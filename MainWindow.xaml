@@ -1,0 +1,24 @@
+﻿<Window x:Class="garrysmod_fixr_uppr.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:garrysmod_fixr_uppr"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+	<Grid>
+		<TextBlock FontSize="30" HorizontalAlignment="Center" Height="59" Text="Garrysmod Fix'r Upp'r v0.3 By storm37000" TextWrapping="Wrap" VerticalAlignment="Top" Width="780"/>
+		<TextBlock FontSize="14" HorizontalAlignment="Center" Height="59" Text="You will NOT lose any important data with this program, it only cleans clutter and temporary files.  Greyed out items are ones that are already done." TextWrapping="Wrap" VerticalAlignment="Top" Width="780" Margin="0,40,0,0"/>
+		<Button Name="Applybtn" Content="Apply" HorizontalAlignment="Left" Height="35" Margin="10,104,0,0" VerticalAlignment="Top" Width="225"/>
+		<TextBlock Name="StatusTXT" HorizontalAlignment="Left" Height="35" Margin="245,104,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="545"/>
+		<ListBox Margin="10,144,10,10">
+			<CheckBox Name="check0" Content="[Requires Steam be Closed] Cleanup Workshop Download Cache [Fixes 'Map is Missing-itis'.  Can Fix Crashes and Reclame Large Amounts of Storage Space]" Height="20" Width="auto"/>
+			<CheckBox Name="check1" Content="Delete LUA Cache Folder [Very High Chance to Fix Crashes and Reclame Large Amounts of Storage Space]" Height="20" Width="auto"/>
+			<CheckBox Name="check2" Content="Delete Extracted Workshop File Cache [Can Fix Crashes and Reclaim Large Amounts of Storage Space]" Height="20" Width="auto"/>
+			<CheckBox Name="check3" Content="Delete VDF File [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
+			<CheckBox Name="check4" Content="Delete DB Files [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
+			<CheckBox Name="check5" Content="Clean Cached Sprays from other users on servers you have joined [Frees Some Storage Space]" Height="20" Width="auto"/>
+			<CheckBox Name="check6" Content="[Comming Soon!] Data Folder Clean [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
+		</ListBox>
+	</Grid>
+</Window>
