@@ -4,6 +4,8 @@ using System.Windows.Media;
 using System.Threading.Tasks;
 using System;
 using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace garrysmod_fixr_uppr
 {
@@ -12,37 +14,65 @@ namespace garrysmod_fixr_uppr
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private string dir = @"C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod";
+		private readonly string version = "0.4";
+		private string dir = @"C:\\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod";
 		public MainWindow()
 		{
 			InitializeComponent();
-			if (Directory.Exists(dir))
+			header.Text = header.Text.Replace("$[version]", version);
+			if (Process.GetProcessesByName("Steam").Length > 0)
 			{
-				StatusTXT.Foreground = Brushes.ForestGreen;
-				StatusTXT.Text = "garrysmod folder found! Check what you want and click apply.";
-				if (Process.GetProcessesByName("Steam").Length > 0)
-				{
-					MessageBox.Show("You Must Close Steam to use Some Features of this Program.");
-				}
+				MessageBox.Show("You Must Close Steam to use Some Features of this Program.");
 			}
-			else
-			{
-				StatusTXT.Text = "garrysmod folder NOT found!";
-				StatusTXT.Foreground = Brushes.Red;
-			}
-			Applybtn.Click += ApplyBtnClick;
 			refresh();
 		}
 
 		private void refresh()
 		{
+			if (Directory.Exists(dir))
+			{
+				StatusTXT.Foreground = Brushes.ForestGreen;
+				StatusTXT.Text = "garrysmod folder found! (" + dir + ") Check what you want and click apply.";
+			}
+			else
+			{
+				if (Directory.Exists(@"C:\\Program Files (x86)\Steam\config"))
+				{
+					string search = "\"BaseInstallFolder_1\"";
+					IEnumerable<String> lines = File.ReadLines(@"C:\\Program Files (x86)\Steam\config\config.vdf").Select(l => new { Line = l, Index = l.IndexOf(search) }).Where(x => x.Index > -1).Select(x => x.Line.Substring(x.Index + search.Length));
+					foreach (var line in lines)
+					{
+						string linedir = line.Trim().Replace("\"", "") + @"\steamapps\common\GarrysMod";
+						if (Directory.Exists(linedir))
+						{
+							dir = linedir + @"\garrysmod";
+							StatusTXT.Foreground = Brushes.ForestGreen;
+							StatusTXT.Text = "garrysmod folder found! (" + dir + ") Check what you want and click apply.";
+							break;
+						}
+					}
+					if (!Directory.Exists(dir))
+					{
+						StatusTXT.Text = "garrysmod folder NOT found!";
+						StatusTXT.Foreground = Brushes.Red;
+						Applybtn.IsEnabled = false;
+					}
+				}
+				else
+				{
+					StatusTXT.Text = "Steam install folder NOT found!";
+					StatusTXT.Foreground = Brushes.Red;
+					Applybtn.IsEnabled = false;
+				}
+			}
+			Applybtn.Click += ApplyBtnClick;
 			check0.IsEnabled = Process.GetProcessesByName("Steam").Length == 0 && (Directory.Exists(dir + @"\..\..\..\workshop\content\4000") || File.Exists(dir + @"\..\..\..\workshop\appworkshop_4000.acf"));
 			check1.IsEnabled = Directory.Exists(dir + @"\cache");
 			check2.IsEnabled = Directory.Exists(dir + @"\downloads");
 			check3.IsEnabled = Directory.Exists(dir + @"\cfg") && File.Exists(dir + @"\cfg\client.vdf");
 			check4.IsEnabled = File.Exists(dir+@"\cl.db") || File.Exists(dir + @"\mn.db");
 			check5.IsEnabled = Directory.Exists(dir + @"\download");
-			check6.IsEnabled = false;
+			check6.IsEnabled = (Directory.Exists(dir + @"\..\bin") && (File.Exists(dir + @"\..\bin\analytics.dll") || File.Exists(dir + @"\..\bin\GameAnalytics.dll"))) || (Directory.Exists(dir + @"\..\bin\win64") && (File.Exists(dir + @"\..\bin\win64\analytics.dll") || File.Exists(dir + @"\..\bin\win64\GameAnalytics.dll")));
 		}
 
 		private void statusmsg(string msg, Brush color)
@@ -52,9 +82,8 @@ namespace garrysmod_fixr_uppr
 				StatusTXT.Text = msg;
 				StatusTXT.Foreground = color;
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
-
 			}
 		}
 
@@ -140,6 +169,19 @@ namespace garrysmod_fixr_uppr
 				StatusTXT.Text = "Cleaning cached other players' sprays...";
 				await deletefolder(dir + @"\download");
 				check5.IsChecked = false;
+			}
+			if ((bool)check6.IsChecked)
+			{
+				StatusTXT.Foreground = Brushes.Blue;
+				StatusTXT.Text = "Disabling telemetry DLLs...";
+				await deletefile(dir + @"\..\bin\analytics.dll");
+				await deletefile(dir + @"\..\bin\GameAnalytics.dll");
+				if (Directory.Exists(dir + @"\..\bin\win64"))
+				{
+					await deletefile(dir + @"\..\bin\win64\analytics.dll");
+					await deletefile(dir + @"\..\bin\win64\GameAnalytics.dll");
+				}
+				check6.IsChecked = false;
 			}
 			Applybtn.IsEnabled = true;
 			refresh();

@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 	<Grid>
-		<TextBlock FontSize="30" HorizontalAlignment="Center" Height="59" Text="Garrysmod Fix'r Upp'r v0.3 By storm37000" TextWrapping="Wrap" VerticalAlignment="Top" Width="780"/>
+		<TextBlock Name="header"  FontSize="30" HorizontalAlignment="Center" Height="59" Text="Garrysmod Fix'r Upp'r $[version] By storm37000" TextWrapping="Wrap" VerticalAlignment="Top" Width="780"/>
 		<TextBlock FontSize="14" HorizontalAlignment="Center" Height="59" Text="You will NOT lose any important data with this program, it only cleans clutter and temporary files.  Greyed out items are ones that are already done." TextWrapping="Wrap" VerticalAlignment="Top" Width="780" Margin="0,40,0,0"/>
 		<Button Name="Applybtn" Content="Apply" HorizontalAlignment="Left" Height="35" Margin="10,104,0,0" VerticalAlignment="Top" Width="225"/>
 		<TextBlock Name="StatusTXT" HorizontalAlignment="Left" Height="35" Margin="245,104,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="545"/>
@@ -18,7 +18,7 @@
 			<CheckBox Name="check3" Content="Delete VDF File [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
 			<CheckBox Name="check4" Content="Delete DB Files [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
 			<CheckBox Name="check5" Content="Clean Cached Sprays from other users on servers you have joined [Frees Some Storage Space]" Height="20" Width="auto"/>
-			<CheckBox Name="check6" Content="[Comming Soon!] Data Folder Clean [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
+			<CheckBox Name="check6" Content="Disable Telemetry DLLs." Height="20" Width="auto"/>
 		</ListBox>
 	</Grid>
 </Window>
