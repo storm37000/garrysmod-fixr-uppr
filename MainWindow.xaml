@@ -9,16 +9,16 @@
 	<Grid>
 		<TextBlock Name="header"  FontSize="30" HorizontalAlignment="Center" Height="59" Text="Garrysmod Fix'r Upp'r $[version] By storm37000" TextWrapping="Wrap" VerticalAlignment="Top" Width="780"/>
 		<TextBlock FontSize="14" HorizontalAlignment="Center" Height="59" Text="You will NOT lose any important data with this program, it only cleans clutter and temporary files.  Greyed out items are ones that are already done." TextWrapping="Wrap" VerticalAlignment="Top" Width="780" Margin="0,40,0,0"/>
-		<Button Name="Applybtn" Content="Apply" HorizontalAlignment="Left" Height="35" Margin="10,104,0,0" VerticalAlignment="Top" Width="225"/>
+		<Button Name="Applybtn" Content="Apply" IsEnabled="False" HorizontalAlignment="Left" Height="35" Margin="10,104,0,0" VerticalAlignment="Top" Width="225"/>
 		<TextBlock Name="StatusTXT" HorizontalAlignment="Left" Height="35" Margin="245,104,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="545"/>
 		<ListBox Margin="10,144,10,10">
-			<CheckBox Name="check0" Content="[Requires Steam be Closed] Cleanup Workshop Download Cache [Fixes 'Map is Missing-itis'.  Can Fix Crashes and Reclame Large Amounts of Storage Space]" Height="20" Width="auto"/>
-			<CheckBox Name="check1" Content="Delete LUA Cache Folder [Very High Chance to Fix Crashes and Reclame Large Amounts of Storage Space]" Height="20" Width="auto"/>
-			<CheckBox Name="check2" Content="Delete Extracted Workshop File Cache [Can Fix Crashes and Reclaim Large Amounts of Storage Space]" Height="20" Width="auto"/>
-			<CheckBox Name="check3" Content="Delete VDF File [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
-			<CheckBox Name="check4" Content="Delete DB Files [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
-			<CheckBox Name="check5" Content="Clean Cached Sprays from other users on servers you have joined [Frees Some Storage Space]" Height="20" Width="auto"/>
-			<CheckBox Name="check6" Content="Disable Telemetry DLLs." Height="20" Width="auto"/>
+            <CheckBox Name="check0" IsEnabled="False" Content="[Requires Steam be Closed] Cleanup Workshop Download Cache [Fixes 'Map is Missing-itis'.  Can Fix Crashes and Reclame Large Amounts of Storage Space]" Height="20" Width="auto"/>
+            <CheckBox Name="check1" IsEnabled="False" Content="Delete Game Cache Folder [Very High Chance to Fix Crashes and Reclame Large Amounts of Storage Space]" Height="20" Width="auto"/>
+            <CheckBox Name="check2" IsEnabled="False" Content="Delete FastDL File Cache [Can Fix Crashes and Reclaim Large Amounts of Storage Space]" Height="20" Width="auto"/>
+            <CheckBox Name="check3" IsEnabled="False" Content="Delete VDF File [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
+            <CheckBox Name="check4" IsEnabled="False" Content="Delete DB Files [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
+            <CheckBox Name="check5" IsEnabled="False" Content="Clean cached sprays from other players [Frees Some Storage Space]" Height="20" Width="auto"/>
+            <CheckBox Name="check6" IsEnabled="False" Content="Disable Telemetry DLLs." Height="20" Width="auto"/>
 		</ListBox>
 	</Grid>
 </Window>
