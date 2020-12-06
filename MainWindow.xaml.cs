@@ -92,6 +92,7 @@ namespace garrysmod_fixr_uppr
 			check4.IsEnabled = File.Exists(dir+@"\cl.db") || File.Exists(dir + @"\mn.db");
 			check5.IsEnabled = Directory.Exists(dir + @"\download");
 			check6.IsEnabled = (Directory.Exists(dir + @"\..\bin") && (File.Exists(dir + @"\..\bin\analytics.dll") || File.Exists(dir + @"\..\bin\GameAnalytics.dll"))) || (Directory.Exists(dir + @"\..\bin\win64") && (File.Exists(dir + @"\..\bin\win64\analytics.dll") || File.Exists(dir + @"\..\bin\win64\GameAnalytics.dll")));
+			check5.IsEnabled = Directory.Exists(dir + @"\addons") && Directory.GetFiles(dir + @"\addons").Count() > 0;
 			Applybtn.IsEnabled = check0.IsEnabled || check1.IsEnabled || check2.IsEnabled || check3.IsEnabled || check4.IsEnabled || check5.IsEnabled || check6.IsEnabled;
 			Applybtn.Click += ApplyBtnClick;
 		}
@@ -203,6 +204,13 @@ namespace garrysmod_fixr_uppr
 					await deletefile(dir + @"\..\bin\win64\GameAnalytics.dll");
 				}
 				check6.IsChecked = false;
+			}
+			if ((bool)check7.IsChecked)
+			{
+				StatusTXT.Foreground = Brushes.Blue;
+				StatusTXT.Text = "Cleaning addons folder...";
+				await deletefolder(dir + @"\addons");
+				check7.IsChecked = false;
 			}
 			Applybtn.IsEnabled = true;
 			refresh();

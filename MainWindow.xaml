@@ -12,13 +12,14 @@
 		<Button Name="Applybtn" Content="Apply" IsEnabled="False" HorizontalAlignment="Left" Height="35" Margin="10,104,0,0" VerticalAlignment="Top" Width="225"/>
 		<TextBlock Name="StatusTXT" HorizontalAlignment="Left" Height="35" Margin="245,104,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="545"/>
 		<ListBox Margin="10,144,10,10">
-            <CheckBox Name="check0" IsEnabled="False" Content="[Requires Steam be Closed] Cleanup Workshop Download Cache [Fixes 'Map is Missing-itis'.  Can Fix Crashes and Reclame Large Amounts of Storage Space]" Height="20" Width="auto"/>
+            <CheckBox Name="check0" IsEnabled="False" Content="[Requires Steam be Closed] Cleanup Workshop Download Cache [Can Fix Crashes and Reclame Large Amounts of Storage Space]" Height="20" Width="auto"/>
+            <CheckBox Name="check7" IsEnabled="False" Content="Clean addons Folder [Can Fix Crashes and Reclame Large Amounts of Storage Space]" Height="20" Width="auto"/>
             <CheckBox Name="check1" IsEnabled="False" Content="Delete Game Cache Folder [Very High Chance to Fix Crashes and Reclame Large Amounts of Storage Space]" Height="20" Width="auto"/>
             <CheckBox Name="check2" IsEnabled="False" Content="Delete FastDL File Cache [Can Fix Crashes and Reclaim Large Amounts of Storage Space]" Height="20" Width="auto"/>
             <CheckBox Name="check3" IsEnabled="False" Content="Delete VDF File [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
             <CheckBox Name="check4" IsEnabled="False" Content="Delete DB Files [Can Fix Crashes and Clientside LUA Errors]" Height="20" Width="auto"/>
             <CheckBox Name="check5" IsEnabled="False" Content="Clean cached sprays from other players [Frees Some Storage Space]" Height="20" Width="auto"/>
-            <CheckBox Name="check6" IsEnabled="False" Content="Disable Telemetry DLLs." Height="20" Width="auto"/>
+            <CheckBox Name="check6" IsEnabled="False" Content="Disable Telemetry DLLs. (verify game files to restore them)" Height="20" Width="auto"/>
 		</ListBox>
 	</Grid>
 </Window>
