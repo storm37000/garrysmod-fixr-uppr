@@ -61,8 +61,19 @@ namespace garrysmod_fixr_uppr
 			}
 			else
 			{
-				RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
-				string steamdir = key.GetValue("SteamPath").ToString() + @"/config";
+				string steamdir = string.Empty;
+
+				try
+                {
+					RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
+					steamdir = key.GetValue("SteamPath").ToString() + @"/config";
+                }
+                catch (Exception e)
+                {
+					StatusTXT.Foreground = Brushes.DeepPink;
+					StatusTXT.Text = "Fatal Error: " + e.Message;
+					return;
+                }
 				if (Directory.Exists(steamdir))
 				{
 					StatusTXT.Foreground = Brushes.Blue;
@@ -81,8 +92,8 @@ namespace garrysmod_fixr_uppr
 				}
 				else
 				{
-					StatusTXT.Text = "Steam install folder NOT found!";
 					StatusTXT.Foreground = Brushes.Red;
+					StatusTXT.Text = "Steam install folder NOT found!";
 				}
 			}
 			check0.IsEnabled = Process.GetProcessesByName("Steam").Length == 0 && (Directory.Exists(dir + @"\..\..\..\workshop\content\4000") || File.Exists(dir + @"\..\..\..\workshop\appworkshop_4000.acf"));
