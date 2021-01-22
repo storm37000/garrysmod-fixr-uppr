@@ -16,8 +16,7 @@ namespace garrysmod_fixr_uppr
 	public partial class MainWindow : Window
 	{
 		private readonly string version = "0.5";
-		private string dir = @"C:\\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod";
-		//private string steamdir = @"C:\\Program Files (x86)\Steam\config";
+		private string dir = string.Empty;
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -29,73 +28,91 @@ namespace garrysmod_fixr_uppr
 			refresh();
 		}
 
-		private Task getAlternateInstall()
+		private bool gmodFolderFoundStatus()
 		{
-			return Task.Run(() => {
-				for (byte i = 1; i < 255; i++)
-				{
-					if (!Directory.Exists(dir))
-					{
-						string search = "\"BaseInstallFolder_" + i + "\"";
-						IEnumerable<String> lines = File.ReadLines(@"C:\\Program Files (x86)\Steam\config\config.vdf").Select(l => new { Line = l, Index = l.IndexOf(search) }).Where(x => x.Index > -1).Select(x => x.Line.Substring(x.Index + search.Length));
-						foreach (string line in lines)
-						{
-							string linedir = line.Trim().Replace("\"", "") + @"\steamapps\common\GarrysMod";
-							if (Directory.Exists(linedir))
-							{
-								dir = linedir + @"\garrysmod";
-								break;
-							}
-						}
-					}
-				}
-			});
+			if (!Directory.Exists(dir))
+			{
+				StatusTXT.Foreground = Brushes.Red;
+				StatusTXT.Text = "Steam program folder found but garrysmod folder NOT found!";
+				return false;
+			}
+			else
+			{
+				StatusTXT.Foreground = Brushes.ForestGreen;
+				StatusTXT.Text = "garrysmod folder found! (" + dir + ") Check what you want and click apply.";
+				return true;
+			}
 		}
 
 		private async void refresh()
 		{
-			if (Directory.Exists(dir))
+			string steamdir = string.Empty;
+
+			try
 			{
-				StatusTXT.Foreground = Brushes.ForestGreen;
-				StatusTXT.Text = "garrysmod folder found! (" + dir + ") Check what you want and click apply.";
+				RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
+				if (key == null)
+				{
+					StatusTXT.Foreground = Brushes.DeepPink;
+					StatusTXT.Text = "Fatal Error: Could not read steam location registry key!  Please reinstall steam.";
+					return;
+				}
+				steamdir = key.GetValue("SteamPath").ToString();
+			}
+			catch(Exception e)
+			{
+				StatusTXT.Foreground = Brushes.DeepPink;
+				StatusTXT.Text = "Fatal Error: " + e.Message;
+				return;
+			}
+
+			if (Directory.Exists(steamdir))
+			{
+				StatusTXT.Foreground = Brushes.Blue;
+				StatusTXT.Text = "Steam program folder found!  Searching for garrysmod folder...";
+				dir = steamdir + "/steamapps/common/GarrysMod/garrysmod";
+				if (!gmodFolderFoundStatus())
+				{
+					await Task.Run(() => {
+						for (byte i = 1; i < 255; i++)
+						{
+							if (!Directory.Exists(dir))
+							{
+								string search = "\"BaseInstallFolder_" + i + "\"";
+								IEnumerable<String> lines = new string[0];
+								try
+								{
+									lines = File.ReadLines(steamdir + @"/config/config.vdf").Select(l => new { Line = l, Index = l.IndexOf(search) }).Where(x => x.Index > -1).Select(x => x.Line.Substring(x.Index + search.Length));
+								}catch(Exception e)
+								{
+									StatusTXT.Dispatcher.Invoke(() =>
+									{
+										StatusTXT.Foreground = Brushes.DeepPink;
+										StatusTXT.Text = "Fatal Error: " + e.Message;
+									});
+									break;
+								}
+								foreach (string line in lines)
+								{
+									string linedir = line.Trim().Replace("\"", "") + @"\steamapps\common\GarrysMod";
+									if (Directory.Exists(linedir))
+									{
+										dir = linedir + @"\garrysmod";
+										break;
+									}
+								}
+							}
+						}
+					});
+				}
+
 			}
 			else
 			{
-				string steamdir = string.Empty;
-
-				try
-                {
-					RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
-					steamdir = key.GetValue("SteamPath").ToString() + @"/config";
-                }
-                catch (Exception e)
-                {
-					StatusTXT.Foreground = Brushes.DeepPink;
-					StatusTXT.Text = "Fatal Error: " + e.Message;
-					return;
-                }
-				if (Directory.Exists(steamdir))
-				{
-					StatusTXT.Foreground = Brushes.Blue;
-					StatusTXT.Text = "Steam program folder found!  Searching for garrysmod folder...";
-					await getAlternateInstall();
-					if (!Directory.Exists(dir))
-					{
-						StatusTXT.Foreground = Brushes.Red;
-						StatusTXT.Text = "Steam program folder found but garrysmod folder NOT found!";
-					}
-					else
-					{
-						StatusTXT.Foreground = Brushes.ForestGreen;
-						StatusTXT.Text = "garrysmod folder found! (" + dir + ") Check what you want and click apply.";
-					}
-				}
-				else
-				{
-					StatusTXT.Foreground = Brushes.Red;
-					StatusTXT.Text = "Steam install folder NOT found!";
-				}
+				StatusTXT.Foreground = Brushes.Red;
+				StatusTXT.Text = "Steam install folder NOT found!";
 			}
+
 			check0.IsEnabled = Process.GetProcessesByName("Steam").Length == 0 && (Directory.Exists(dir + @"\..\..\..\workshop\content\4000") || File.Exists(dir + @"\..\..\..\workshop\appworkshop_4000.acf"));
 			check1.IsEnabled = Directory.Exists(dir + @"\cache");
 			check2.IsEnabled = Directory.Exists(dir + @"\downloads");
@@ -108,18 +125,6 @@ namespace garrysmod_fixr_uppr
 			Applybtn.Click += ApplyBtnClick;
 		}
 
-		private void statusmsg(string msg, Brush color)
-		{
-			try
-			{
-				StatusTXT.Text = msg;
-				StatusTXT.Foreground = color;
-			}
-			catch(Exception)
-			{
-			}
-		}
-
 		private Task deletefile(string path)
 		{
 			return Task.Run(() => {
@@ -129,7 +134,11 @@ namespace garrysmod_fixr_uppr
 				}
 				catch (Exception e)
 				{
-					statusmsg(e.Message, Brushes.Red);
+					StatusTXT.Dispatcher.Invoke(() =>
+					{
+						StatusTXT.Text = e.Message;
+						StatusTXT.Foreground = Brushes.Red;
+					});
 				}
 			});
 		}
@@ -143,7 +152,11 @@ namespace garrysmod_fixr_uppr
 				}
 				catch (Exception e)
 				{
-					statusmsg(e.Message, Brushes.Red);
+					StatusTXT.Dispatcher.Invoke(() =>
+					{
+						StatusTXT.Text = e.Message;
+						StatusTXT.Foreground = Brushes.Red;
+					});
 				}
 			});
 		}
